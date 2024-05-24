@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,8 +25,6 @@ public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
 {
     CreatureController creature;
     Vector3 nodePos;
-    GameObject cubeVisualization;
-    float timer;
     public CreaturePatrolState(CreatureController creature, CreatureController.CreatureState state, LocationManager locationManager) : base(state)
     {
         this.creature = creature;
@@ -40,10 +33,6 @@ public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
     public override void EnterState()
     { 
         nodePos = creature.locationManager.GetNodeToPatrol();
-        Debug.Log("Patrolling to " + nodePos);
-        cubeVisualization = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cubeVisualization.transform.position = nodePos;
-
         creature.agent.SetDestination(nodePos);
     }
     
@@ -59,7 +48,7 @@ public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
 
     public override void UpdateState()
     {
-        if (Vector3.Distance(creature.transform.position, nodePos) <= 5f)
+        if (Vector3.Distance(creature.transform.position, nodePos) <= 2f)
         {
             SetNewNode();
             return;
