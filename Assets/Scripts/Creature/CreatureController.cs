@@ -14,7 +14,7 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
     }
     private void Awake()
     {
-        FindObjectOfType<PlayerController>().interact += Chase;
+        FindObjectOfType<PC>().madeSound += Chase;
         agent = GetComponent<NavMeshAgent>();
 
         states.Add(CreatureState.Patrol, new CreaturePatrolState(this, CreatureState.Patrol));

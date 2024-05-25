@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6088437755479981478}
   - component: {fileID: 7966015817433323894}
-  - component: {fileID: 492965827282471039}
+  - component: {fileID: 2830722350216193465}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -129,7 +129,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &492965827282471039
+--- !u!114 &2830722350216193465
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,7 +142,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundList:
-  - name: Idle
+  - name: PlayerWalk
     sounds: []
-  - name: ManequeenWalking
+  - name: CreatureWalk
+    sounds: []
+  - name: CreatureSearch
+    sounds: []
+  - name: PlayerBreatheIn
+    sounds: []
+  - name: PlayerBreatheOut
+    sounds: []
+  - name: HeartBeat
     sounds: []

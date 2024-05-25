@@ -6,7 +6,8 @@ public enum SoundType
     PlayerWalk,
     CreatureWalk,
     CreatureSearch,
-    PlayerStopBreath,
+    PlayerBreatheIn,
+    PlayerBreatheOut,
     HeartBeat
 }
 
@@ -45,10 +46,6 @@ public class SoundManager : MonoBehaviour
     {
         instance.audioSource.loop = false;
         instance.audioSource.Stop();
-    }
-    public static void PlaySound(AudioClip audio, float volume = 1)
-    {
-        instance.audioSource.PlayOneShot(audio, volume);
     }
 
 #if UNITY_EDITOR

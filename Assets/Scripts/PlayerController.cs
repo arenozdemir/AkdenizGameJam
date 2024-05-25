@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 public class PlayerController : StateManager<PlayerController.PlayerStates>
 {
@@ -12,10 +13,11 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
         HoldBreath,
         Interacting
     }
-    
+
+    public static float breatheAmount;
     public float noiseRadius;
     public float searchArea;
-    public Action interact;
+    //public Action interact;
 
     public Inputs inputs;
     private void Awake()
@@ -23,6 +25,7 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
         inputs = new Inputs();
         inputs.PlayerActions.Movement.started += Movement;
         inputs.PlayerActions.HoldBreath.started += HoldBreath;
+        inputs.PlayerActions.HoldBreath.canceled += ctx => TransitionToState(PlayerStates.Idle);
         inputs.PlayerActions.Interaction.started += Interact;
 
         states.Add(PlayerStates.Idle, new PlayerIdleState(this, PlayerStates.Idle));
@@ -31,6 +34,7 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
         states.Add(PlayerStates.Interacting, new PlayerInteractionState(this, PlayerStates.Interacting));
 
         currentState = states[PlayerStates.Idle];
+        breatheAmount = 100f;
     }
     private void Movement(InputAction.CallbackContext ctx)
     {
@@ -78,7 +82,8 @@ public class PlayerIdleState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
-        
+        PlayerController.breatheAmount += Time.deltaTime * 10f;
+        PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
     }
 }
 
@@ -92,12 +97,12 @@ public class PlayerMovingState : BaseState<PlayerController.PlayerStates>
 
     public override void EnterState()
     {
-        
+       
     }
 
     public override void ExitState()
     {
-
+       
     }
 
     public override PlayerController.PlayerStates GetNextState()
@@ -107,6 +112,9 @@ public class PlayerMovingState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
+        PlayerController.breatheAmount += Time.deltaTime * 10f;
+        PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
+        
         Vector2 movement = player.inputs.PlayerActions.Movement.ReadValue<Vector2>();
         player.transform.Translate(new Vector3(movement.x, 0, movement.y) * Time.deltaTime * 2f);
         if(movement == Vector2.zero)
@@ -126,12 +134,12 @@ public class PlayerHoldBreathState : BaseState<PlayerController.PlayerStates>
 
     public override void EnterState()
     {
-        
+        SoundManager.PlaySound(SoundType.PlayerBreatheIn);
     }
 
     public override void ExitState()
     {
-
+        SoundManager.PlaySound(SoundType.PlayerBreatheOut);
     }
 
     public override PlayerController.PlayerStates GetNextState()
@@ -141,7 +149,9 @@ public class PlayerHoldBreathState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
-
+        PlayerController.breatheAmount -= Time.deltaTime * 5f;
+        PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
+        Debug.Log(PlayerController.breatheAmount);
     }
 }
 
@@ -162,7 +172,7 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
         {
             if (collider.TryGetComponent(out PC pc))
             {
-                player.interact?.Invoke();
+                //player.interact?.Invoke();
                 pc.Interact(pc);
             }
         }

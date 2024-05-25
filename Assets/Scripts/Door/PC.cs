@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class PC : MonoBehaviour
 {
+    public Action madeSound;
     public float activation;
     public bool isActivated;
     private IEnumerator enumerator;
@@ -25,7 +27,8 @@ public class PC : MonoBehaviour
     }
     private IEnumerator ActivatePC()
     {
-        while(activation <= 30)
+        madeSound?.Invoke();
+        while (activation <= 30)
         {
             if (activation >= 30)
             {

@@ -44,7 +44,6 @@ public class LocationManager : MonoBehaviour
             return Vector3.zero;
         }
     }
-
     public Vector3 GetPlayerPosition()
     {
         return playerController.transform.position;
