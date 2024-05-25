@@ -15,8 +15,9 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
     }
     private void Awake()
     {
-        FindObjectOfType<PC>().madeSound += Chase;
         FindObjectOfType<PlayerController>().makeNoise += Attack;
+        FindObjectOfType<PC>().makeNoise += Chase;
+
         agent = GetComponent<NavMeshAgent>();
 
         states.Add(CreatureState.Patrol, new CreaturePatrolState(this, CreatureState.Patrol));
@@ -93,7 +94,7 @@ public class CreatureChaseState : BaseState<CreatureController.CreatureState>
 
     public override void ExitState()
     {
-        creature.agent.speed = 3.5f;
+        creature.agent.speed = 1f;
     }
 
     public override CreatureController.CreatureState GetNextState()

@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 public class PlayerController : StateManager<PlayerController.PlayerStates>
 {
@@ -173,7 +172,7 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
 {
     PlayerController player;
     Collider[] colliders;
-    PC pc;
+    InterfaceInteractable interactable;
     public PlayerInteractionState(PlayerController player, PlayerController.PlayerStates state) : base(state)
     {
         this.player = player;
@@ -184,17 +183,17 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
         colliders = Physics.OverlapSphere(player.transform.position, player.noiseRadius);
         foreach (var collider in colliders)
         {
-            if (collider.TryGetComponent(out PC pc))
+            if (collider.TryGetComponent(out InterfaceInteractable interactable))
             {
-                //player.interact?.Invoke();
-                pc.Interact(pc);
+                this.interactable = interactable;
+                interactable.Interact();
             }
         }
     }
 
     public override void ExitState()
     {
-
+        interactable.OutInteract();
     }
 
     public override PlayerController.PlayerStates GetNextState()
