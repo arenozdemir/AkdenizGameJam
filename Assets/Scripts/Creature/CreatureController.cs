@@ -119,7 +119,6 @@ public class CreatureSearchState : BaseState<CreatureController.CreatureState>
         timer = 0f;
         searchTime = 5f;
         searchCount = 0;
-        Debug.Log("enter search state");
         nodePos = creature.locationManager.GetSearchNode();
         creature.agent.SetDestination(nodePos);
     }
