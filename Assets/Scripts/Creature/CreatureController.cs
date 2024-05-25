@@ -5,6 +5,7 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
 {
     public LocationManager locationManager;
     public NavMeshAgent agent;
+    public float searchArea = 5f;
     public enum CreatureState
     {
         Chase,
@@ -13,19 +14,25 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
     }
     private void Awake()
     {
+        FindObjectOfType<PlayerController>().interact += Chase;
         agent = GetComponent<NavMeshAgent>();
 
-        states.Add(CreatureState.Patrol, new CreaturePatrolState(this, CreatureState.Patrol, locationManager));
+        states.Add(CreatureState.Patrol, new CreaturePatrolState(this, CreatureState.Patrol));
+        states.Add(CreatureState.Chase, new CreatureChaseState(this, CreatureState.Chase));
+        states.Add(CreatureState.Search, new CreatureSearchState(this, CreatureState.Search));
 
         currentState = states[CreatureState.Patrol];
     }
-
+    private void Chase()
+    {
+        TransitionToState(CreatureState.Chase);
+    }
 }
 public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
 {
     CreatureController creature;
     Vector3 nodePos;
-    public CreaturePatrolState(CreatureController creature, CreatureController.CreatureState state, LocationManager locationManager) : base(state)
+    public CreaturePatrolState(CreatureController creature, CreatureController.CreatureState state) : base(state)
     {
         this.creature = creature;
     }
@@ -58,6 +65,98 @@ public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
     private void SetNewNode()
     {
         nodePos = creature.locationManager.GetNodeToPatrol();
+        creature.agent.SetDestination(nodePos);
+    }
+}
+public class CreatureChaseState : BaseState<CreatureController.CreatureState>
+{
+    CreatureController creature;
+    Vector3 playerPos;
+    public CreatureChaseState(CreatureController creature, CreatureController.CreatureState state) : base(state)
+    {
+        this.creature = creature;
+    }
+
+    public override void EnterState()
+    {
+        playerPos = creature.locationManager.GetPlayerPosition();
+        creature.agent.speed = 5f;
+        creature.agent.SetDestination(playerPos);
+    }
+
+    public override void ExitState()
+    {
+        creature.agent.speed = 3.5f;
+    }
+
+    public override CreatureController.CreatureState GetNextState()
+    {
+        return CreatureController.CreatureState.Search;
+    }
+
+    public override void UpdateState()
+    {
+        if (Vector3.Distance(creature.transform.position, playerPos) <= 2f)
+        {
+            creature.TransitionToState(CreatureController.CreatureState.Search);
+        }
+    }
+}
+public class CreatureSearchState : BaseState<CreatureController.CreatureState>
+{
+    CreatureController creature;
+    Vector3 nodePos;
+    float timer;
+    float searchTime;
+    int searchCount;
+    public CreatureSearchState(CreatureController creature, CreatureController.CreatureState state) : base(state)
+    {
+        this.creature = creature;
+    }
+
+    public override void EnterState()
+    {
+        timer = 0f;
+        searchTime = 5f;
+        searchCount = 0;
+        Debug.Log("enter search state");
+        nodePos = creature.locationManager.GetSearchNode();
+        creature.agent.SetDestination(nodePos);
+    }
+
+    public override void ExitState()
+    {
+        timer = 0f;
+        searchTime = 5f;
+        searchCount = 0;
+        creature.agent.speed = 2f;
+    }
+
+    public override CreatureController.CreatureState GetNextState()
+    {
+        return CreatureController.CreatureState.Patrol;
+    }
+
+    public override void UpdateState()
+    {
+        if (Vector3.Distance(creature.transform.position, nodePos) <= 1f)
+        {
+            timer += Time.deltaTime;
+            if (timer >= searchTime)
+            {
+                searchCount++;
+                timer = 0;
+                SetNewNode();
+            }
+        }
+        else if (searchCount >= 3)
+        {
+            creature.TransitionToState(CreatureController.CreatureState.Patrol);
+        }
+    }
+    private void SetNewNode()
+    {
+        nodePos = creature.locationManager.GetSearchNode();
         creature.agent.SetDestination(nodePos);
     }
 }

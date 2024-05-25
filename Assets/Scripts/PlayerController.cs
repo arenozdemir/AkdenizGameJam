@@ -12,11 +12,10 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
         HoldBreath,
         Interacting
     }
-    public Action<PC> OnInteract;
-    public Action<PC> OutInteract;
     
     public float noiseRadius;
     public float searchArea;
+    public Action interact;
 
     public Inputs inputs;
     private void Awake()
@@ -64,7 +63,7 @@ public class PlayerIdleState : BaseState<PlayerController.PlayerStates>
 
     public override void EnterState()
     {
-        Debug.Log("Idle");
+        
     }
 
     public override void ExitState()
@@ -79,7 +78,7 @@ public class PlayerIdleState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
-
+        
     }
 }
 
@@ -110,7 +109,10 @@ public class PlayerMovingState : BaseState<PlayerController.PlayerStates>
     {
         Vector2 movement = player.inputs.PlayerActions.Movement.ReadValue<Vector2>();
         player.transform.Translate(new Vector3(movement.x, 0, movement.y) * Time.deltaTime * 2f);
-        
+        if(movement == Vector2.zero)
+        {
+            player.TransitionToState(PlayerController.PlayerStates.Idle);
+        }
     }
 }
 
@@ -155,21 +157,20 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
 
     public override void EnterState()
     {
-        colliders = Physics.OverlapSphere(player.transform.position, player.searchArea);
+        colliders = Physics.OverlapSphere(player.transform.position, player.noiseRadius);
         foreach (var collider in colliders)
         {
             if (collider.TryGetComponent(out PC pc))
             {
-                this.pc = pc;
-                player.OnInteract?.Invoke(pc);
+                player.interact?.Invoke();
+                pc.Interact(pc);
             }
         }
     }
 
     public override void ExitState()
     {
-        player.OutInteract?.Invoke(pc);
-        colliders = null;
+
     }
 
     public override PlayerController.PlayerStates GetNextState()
@@ -179,6 +180,6 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
-
+        
     }
 }

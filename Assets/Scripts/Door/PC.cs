@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class PC : MonoBehaviour
 {
@@ -9,9 +8,6 @@ public class PC : MonoBehaviour
     private IEnumerator enumerator;
     private void Awake()
     {
-        FindObjectOfType<PlayerController>().OnInteract += Interact;
-        FindObjectOfType<PlayerController>().OutInteract += OutInteract;
-
         enumerator = ActivatePC();
         activation = 0f;
     }
@@ -38,7 +34,6 @@ public class PC : MonoBehaviour
                 break;
             }
             activation += 0.1f;
-            Debug.Log(activation);
             yield return new WaitForSeconds(0.1f);
         }
     }
