@@ -5,7 +5,6 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
 {
     public LocationManager locationManager;
     public NavMeshAgent agent;
-    public float searchArea = 5f;
     public enum CreatureState
     {
         Chase,
@@ -16,7 +15,7 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
     private void Awake()
     {
         FindObjectOfType<PlayerController>().makeNoise += Attack;
-        FindObjectOfType<PC>().makeNoise += Chase;
+        PC.makeNoise += Chase;
 
         agent = GetComponent<NavMeshAgent>();
 
@@ -94,7 +93,7 @@ public class CreatureChaseState : BaseState<CreatureController.CreatureState>
 
     public override void ExitState()
     {
-        creature.agent.speed = 1f;
+        
     }
 
     public override CreatureController.CreatureState GetNextState()
@@ -134,9 +133,8 @@ public class CreatureSearchState : BaseState<CreatureController.CreatureState>
     public override void ExitState()
     {
         timer = 0f;
-        searchTime = 5f;
         searchCount = 0;
-        creature.agent.speed = 2f;
+        creature.agent.speed = 1f;
     }
 
     public override CreatureController.CreatureState GetNextState()

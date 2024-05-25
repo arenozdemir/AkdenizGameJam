@@ -1,45 +1,47 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class PC : MonoBehaviour, InterfaceInteractable
 {
     float timer;
 
     public bool isActivated;
-    public event Action makeNoise;
+    public static event Action makeNoise; // makeNoise event'ini static yaparak tüm PC'lerin paylaþmasýný saðlýyoruz.
 
-    private IEnumerator enumerator;
     private void Awake()
     {
-        enumerator = ActivatePC();
         timer = 0f;
     }
+
     public void Interact()
     {
-        StartCoroutine(enumerator);
+        StartCoroutine(ActivatePC());
     }
+
     public void OutInteract()
     {
-        StopCoroutine(enumerator);
+        // OutInteract çaðrýldýðýnda coroutini durdurmak için kullanýlýr.
+        StopAllCoroutines();
     }
+
     private IEnumerator ActivatePC()
     {
-        makeNoise?.Invoke();
+        makeNoise?.Invoke(); // makeNoise event'ini tetikle
+        timer = 0f; // Timer'ý sýfýrla
+
         while (timer <= 20)
         {
             timer += Time.deltaTime;
             Debug.Log(timer);
             yield return null;
         }
-        isActivated = true;
-        StopCoroutine(enumerator);
+        isActivated = true; // Aktivasyon tamamlandý
     }
 }
 
 public interface InterfaceInteractable
 {
-    public void Interact();
-    public void OutInteract();
+    void Interact();
+    void OutInteract();
 }

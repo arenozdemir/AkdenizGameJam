@@ -17,11 +17,14 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
     public float noiseRadius;
     public float searchArea;
     public Action makeNoise;
+    public Animator animator;
 
     public Inputs inputs;
     private void Awake()
     {
         inputs = new Inputs();
+        animator = GetComponent<Animator>();
+        
         inputs.PlayerActions.Movement.started += Movement;
         inputs.PlayerActions.HoldBreath.started += HoldBreath;
         inputs.PlayerActions.HoldBreath.canceled += ctx => TransitionToState(PlayerStates.Idle);
@@ -109,12 +112,12 @@ public class PlayerMovingState : BaseState<PlayerController.PlayerStates>
 
     public override void EnterState()
     {
-       
+        player.animator.SetBool("isWalking", true);
     }
 
     public override void ExitState()
     {
-       
+        player.animator.SetBool("isWalking", false);
     }
 
     public override PlayerController.PlayerStates GetNextState()
@@ -128,8 +131,15 @@ public class PlayerMovingState : BaseState<PlayerController.PlayerStates>
         PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
         
         Vector2 movement = player.inputs.PlayerActions.Movement.ReadValue<Vector2>();
-        player.transform.Translate(new Vector3(movement.x, 0, movement.y) * Time.deltaTime * 2f);
-        if(movement == Vector2.zero)
+        if (movement != Vector2.zero)
+        {
+            Vector3 moveDirection = new Vector3(movement.x, 0, movement.y).normalized;
+            player.transform.Translate(moveDirection * Time.deltaTime, Space.World);
+
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            player.transform.rotation = Quaternion.Lerp(player.transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
+        else
         {
             player.TransitionToState(PlayerController.PlayerStates.Idle);
         }
