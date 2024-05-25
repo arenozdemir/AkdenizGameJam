@@ -17,7 +17,7 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
     public static float breatheAmount;
     public float noiseRadius;
     public float searchArea;
-    //public Action interact;
+    public Action makeNoise;
 
     public Inputs inputs;
     private void Awake()
@@ -47,6 +47,18 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
     private void Interact(InputAction.CallbackContext ctx)
     {
         TransitionToState(PlayerStates.Interacting);
+    }
+    public bool CreatureDetecting()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, noiseRadius);
+        foreach (var col in colliders)
+        {
+            if (col.TryGetComponent(out CreatureController creature))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     private void OnEnable()
     {
@@ -84,6 +96,7 @@ public class PlayerIdleState : BaseState<PlayerController.PlayerStates>
     {
         PlayerController.breatheAmount += Time.deltaTime * 10f;
         PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
+        if (player.CreatureDetecting()) player.makeNoise?.Invoke();
     }
 }
 
@@ -121,6 +134,7 @@ public class PlayerMovingState : BaseState<PlayerController.PlayerStates>
         {
             player.TransitionToState(PlayerController.PlayerStates.Idle);
         }
+        if (player.CreatureDetecting()) player.makeNoise?.Invoke();
     }
 }
 
@@ -190,6 +204,6 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
-        
+        if (player.CreatureDetecting()) player.makeNoise?.Invoke();
     }
 }

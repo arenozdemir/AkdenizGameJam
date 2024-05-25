@@ -10,22 +10,29 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
     {
         Chase,
         Patrol,
-        Search
+        Search,
+        Attack
     }
     private void Awake()
     {
         FindObjectOfType<PC>().madeSound += Chase;
+        FindObjectOfType<PlayerController>().makeNoise += Attack;
         agent = GetComponent<NavMeshAgent>();
 
         states.Add(CreatureState.Patrol, new CreaturePatrolState(this, CreatureState.Patrol));
         states.Add(CreatureState.Chase, new CreatureChaseState(this, CreatureState.Chase));
         states.Add(CreatureState.Search, new CreatureSearchState(this, CreatureState.Search));
+        states.Add(CreatureState.Attack, new CreatureAttackState(this, CreatureState.Attack));
 
         currentState = states[CreatureState.Patrol];
     }
     private void Chase()
     {
         TransitionToState(CreatureState.Chase);
+    }
+    private void Attack()
+    {
+        TransitionToState(CreatureState.Attack);
     }
 }
 public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
@@ -157,5 +164,34 @@ public class CreatureSearchState : BaseState<CreatureController.CreatureState>
     {
         nodePos = creature.locationManager.GetSearchNode();
         creature.agent.SetDestination(nodePos);
+    }
+}
+public class CreatureAttackState : BaseState<CreatureController.CreatureState>
+{
+    CreatureController creature;
+    Vector3 playerPos;
+    public CreatureAttackState(CreatureController creature, CreatureController.CreatureState state) : base(state)
+    {
+        this.creature = creature;
+    }
+
+    public override void EnterState()
+    {
+        creature.agent.isStopped = true;
+    }
+
+    public override void ExitState()
+    {
+        creature.agent.isStopped = false;
+    }
+
+    public override CreatureController.CreatureState GetNextState()
+    {
+        return CreatureController.CreatureState.Patrol;
+    }
+
+    public override void UpdateState()
+    {
+        Debug.Log("Attacking");
     }
 }
