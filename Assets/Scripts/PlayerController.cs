@@ -174,6 +174,7 @@ public class PlayerHoldBreathState : BaseState<PlayerController.PlayerStates>
     {
         PlayerController.breatheAmount -= Time.deltaTime * 5f;
         PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
+        if (PlayerController.breatheAmount <= 0) player.TransitionToState(PlayerController.PlayerStates.Idle);
         Debug.Log(PlayerController.breatheAmount);
     }
 }
