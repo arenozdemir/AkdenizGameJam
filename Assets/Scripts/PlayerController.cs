@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -207,7 +208,9 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
             if (collider.TryGetComponent(out InterfaceInteractable interactable))
             {
                 this.interactable = interactable;
-                interactable.Interact();
+                Transform targetLoc = collider.GetComponentInChildren<InteractLocation>().transform;
+                player.transform.DOMove(targetLoc.position, 3f).OnComplete(() => interactable.Interact());
+                player.transform.DOLookAt(targetLoc.position, 3f).onComplete += () => player.animator.SetBool("isInteract",true);
             }
         }
     }
@@ -215,6 +218,7 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
     public override void ExitState()
     {
         interactable.OutInteract();
+        player.animator.SetBool("isInteract", false);
     }
 
     public override PlayerController.PlayerStates GetNextState()
