@@ -5,10 +5,11 @@ using UnityEngine;
 public class PC : MonoBehaviour, InterfaceInteractable
 {
     float timer;
+    private bool madeNoise;
 
     public bool isActivated;
     public static event Action makeNoise; // makeNoise event'ini static yaparak tüm PC'lerin paylaþmasýný saðlýyoruz.
-
+    public static event Action pcActivated;
     private void Awake()
     {
         timer = 0f;
@@ -27,16 +28,19 @@ public class PC : MonoBehaviour, InterfaceInteractable
 
     private IEnumerator ActivatePC()
     {
-        makeNoise?.Invoke(); // makeNoise event'ini tetikle
-        timer = 0f; // Timer'ý sýfýrla
-
         while (timer <= 20)
         {
             timer += Time.deltaTime;
+            if (timer >= 10 && !madeNoise)
+            {
+                makeNoise?.Invoke();
+                madeNoise = true;
+            }
             Debug.Log(timer);
             yield return null;
         }
         isActivated = true; // Aktivasyon tamamlandý
+        pcActivated?.Invoke();
     }
 }
 

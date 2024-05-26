@@ -9,7 +9,7 @@ public class MainDoor : MonoBehaviour
     int count;
     private void Awake()
     {
-        //FindObjectOfType<PC>().PCActivated += UnLockProcess;
+        PC.pcActivated += UnLockProcess;
     }
 
     private void UnLockProcess()
