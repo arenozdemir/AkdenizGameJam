@@ -17,7 +17,7 @@ public class NarrativeControl : MonoBehaviour
         if (!audioSource.isPlaying)
         {
             //load next scene
-            SceneManager.LoadScene("Maze");
+            SceneManager.LoadScene("SafePlace");
         }
     }
 }

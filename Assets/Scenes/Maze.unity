@@ -2751,6 +2751,7 @@ GameObject:
   - component: {fileID: 5611931013140944264}
   - component: {fileID: 8410227478231775362}
   - component: {fileID: 5474093077501823659}
+  - component: {fileID: 8410227478231775363}
   m_Layer: 0
   m_Name: Cube.065
   m_TagString: Untagged
@@ -5741,7 +5742,7 @@ PrefabInstance:
     - target: {fileID: 9137788289073813524, guid: 42fce61ba2fd168469bd09d9c86d287a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 9.2
       objectReference: {fileID: 0}
     - target: {fileID: 9137788289073813524, guid: 42fce61ba2fd168469bd09d9c86d287a,
         type: 3}
@@ -15796,6 +15797,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1225882278614781824}
   m_Mesh: {fileID: 7035690196794747791, guid: 346f8c74f323ea74baca0a6609d1dc07, type: 3}
+--- !u!65 &8410227478231775363
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225882278614781824}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.053781994, y: 0.0141566275, z: 0.00890987}
+  m_Center: {x: 0.00001454819, y: 0.00055941567, z: -0.00020027929}
 --- !u!1 &8430032912411691746
 GameObject:
   m_ObjectHideFlags: 0

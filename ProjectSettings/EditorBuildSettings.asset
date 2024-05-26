@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SafePlace.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Maze.unity
+    guid: 63e7c5a45c0b6ea4dad69317023a37dc
+  - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 9d3ede8018e96434987c7e8883c9c115
   m_configObjects: {}
