@@ -1,10 +1,20 @@
 using System.Collections.Generic;
-using Unity.Jobs;
 using UnityEngine;
 public class LocationManager : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Grid grid;
+    private void Awake()
+    {
+        if (grid == null)
+        {
+            grid = FindObjectOfType<Grid>();
+        }
+        if (playerController == null)
+        {
+            playerController = FindObjectOfType<PlayerController>();
+        }
+    }
     public Vector3 GetNodeToPatrol()
     {
         List<Vector3> walkableNodes = new List<Vector3>();

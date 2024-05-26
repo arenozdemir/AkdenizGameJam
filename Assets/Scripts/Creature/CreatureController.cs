@@ -5,6 +5,7 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
 {
     public LocationManager locationManager;
     public NavMeshAgent agent;
+    public Animator animator;
     public enum CreatureState
     {
         Chase,
@@ -18,6 +19,7 @@ public class CreatureController : StateManager<CreatureController.CreatureState>
         PC.makeNoise += Chase;
 
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
         states.Add(CreatureState.Patrol, new CreaturePatrolState(this, CreatureState.Patrol));
         states.Add(CreatureState.Chase, new CreatureChaseState(this, CreatureState.Chase));
@@ -48,6 +50,7 @@ public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
     { 
         nodePos = creature.locationManager.GetNodeToPatrol();
         creature.agent.SetDestination(nodePos);
+        creature.animator.SetBool("isWalking", true);
     }
     
     public override void ExitState()
