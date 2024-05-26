@@ -10,7 +10,8 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
         Moving,
         Running,
         HoldBreath,
-        Interacting
+        Interacting,
+        Dead
     }
 
     public static float breatheAmount;
@@ -34,6 +35,7 @@ public class PlayerController : StateManager<PlayerController.PlayerStates>
         states.Add(PlayerStates.Moving, new PlayerMovingState(this, PlayerStates.Moving));
         states.Add(PlayerStates.HoldBreath, new PlayerHoldBreathState(this, PlayerStates.HoldBreath));
         states.Add(PlayerStates.Interacting, new PlayerInteractionState(this, PlayerStates.Interacting));
+        states.Add(PlayerStates.Dead, new PlayerDeathState(this, PlayerStates.Dead));
 
         currentState = states[PlayerStates.Idle];
         breatheAmount = 100f;
@@ -98,7 +100,11 @@ public class PlayerIdleState : BaseState<PlayerController.PlayerStates>
     {
         PlayerController.breatheAmount += Time.deltaTime * 10f;
         PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
-        if (player.CreatureDetecting()) player.makeNoise?.Invoke();
+        if (player.CreatureDetecting())
+        {
+            player.makeNoise?.Invoke();
+            player.TransitionToState(PlayerController.PlayerStates.Dead);
+        }
     }
 }
 
@@ -143,7 +149,11 @@ public class PlayerMovingState : BaseState<PlayerController.PlayerStates>
         {
             player.TransitionToState(PlayerController.PlayerStates.Idle);
         }
-        if (player.CreatureDetecting()) player.makeNoise?.Invoke();
+        if (player.CreatureDetecting())
+        {
+            player.makeNoise?.Invoke();
+            player.TransitionToState(PlayerController.PlayerStates.Dead);
+        }
     }
 }
 
@@ -214,6 +224,39 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
-        if (player.CreatureDetecting()) player.makeNoise?.Invoke();
+        if (player.CreatureDetecting())
+        {
+            player.makeNoise?.Invoke();
+            player.TransitionToState(PlayerController.PlayerStates.Dead);
+        }
+    }
+}
+
+public class PlayerDeathState : BaseState<PlayerController.PlayerStates>
+{
+    PlayerController player;
+    public PlayerDeathState(PlayerController player, PlayerController.PlayerStates state) : base(state)
+    {
+        this.player = player;
+    }
+
+    public override void EnterState()
+    {
+        
+    }
+
+    public override void ExitState()
+    {
+        
+    }
+
+    public override PlayerController.PlayerStates GetNextState()
+    {
+        return PlayerController.PlayerStates.Idle;
+    }
+
+    public override void UpdateState()
+    {
+        Debug.Log("Death state");
     }
 }

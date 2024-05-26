@@ -55,7 +55,7 @@ public class CreaturePatrolState : BaseState<CreatureController.CreatureState>
     
     public override void ExitState()
     {
-        
+        creature.animator.SetBool("isWalking", false);
     }
 
     public override CreatureController.CreatureState GetNextState()
@@ -92,11 +92,12 @@ public class CreatureChaseState : BaseState<CreatureController.CreatureState>
         playerPos = creature.locationManager.GetPlayerPosition();
         creature.agent.speed = 5f;
         creature.agent.SetDestination(playerPos);
+        creature.animator.SetBool("isRunning", true);
     }
 
     public override void ExitState()
     {
-        
+        creature.animator.SetBool("isRunning", false);
     }
 
     public override CreatureController.CreatureState GetNextState()
@@ -180,6 +181,7 @@ public class CreatureAttackState : BaseState<CreatureController.CreatureState>
     public override void EnterState()
     {
         creature.agent.isStopped = true;
+        creature.animator.SetBool("isIdle", true);
     }
 
     public override void ExitState()
@@ -195,5 +197,6 @@ public class CreatureAttackState : BaseState<CreatureController.CreatureState>
     public override void UpdateState()
     {
         Debug.Log("Attacking");
+        creature.transform.rotation = Quaternion.Lerp(creature.transform.rotation, Quaternion.LookRotation(creature.locationManager.GetPlayerPosition() - creature.transform.position), Time.deltaTime * 5f);
     }
 }

@@ -1162,7 +1162,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3314244319800783122}
-  - component: {fileID: 8006838383440872666}
   m_Layer: 0
   m_Name: CreatureVisual
   m_TagString: Untagged
@@ -1187,20 +1186,6 @@ Transform:
   m_Father: {fileID: 9137788289073813524}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &8006838383440872666
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2789240043701840808}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.63
-  m_Height: 1.8907169
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.77487975, z: 0}
 --- !u!1 &2809743776358635113
 GameObject:
   m_ObjectHideFlags: 0
@@ -3090,6 +3075,7 @@ GameObject:
   - component: {fileID: 9137788289073813527}
   - component: {fileID: 33327144798437118}
   - component: {fileID: 4483360213368383837}
+  - component: {fileID: 6006591096613866915}
   m_Layer: 0
   m_Name: Creature
   m_TagString: Untagged
@@ -3127,6 +3113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   locationManager: {fileID: 0}
   agent: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!95 &33327144798437118
 Animator:
   serializedVersion: 5
@@ -3169,6 +3156,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &6006591096613866915
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9137788289073813526}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.8586524
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.90812004, z: 0}
 --- !u!1 &9186455979787127971
 GameObject:
   m_ObjectHideFlags: 0
