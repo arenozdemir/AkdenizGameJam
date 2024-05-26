@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainDoor : MonoBehaviour
 {
@@ -17,9 +18,16 @@ public class MainDoor : MonoBehaviour
         if (count == pCs.Count)
         {
             Debug.Log("Door is unlocked");
+            GetComponent<Animator>().SetBool("isDoorOpen", true);
         }
-        //light open
-        Debug.Log(count);
         count++;  
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent(out PlayerController player))
+        {
+            
+        }
     }
 }

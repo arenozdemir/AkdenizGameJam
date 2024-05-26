@@ -10,6 +10,8 @@ public class PC : MonoBehaviour, InterfaceInteractable
     public bool isActivated;
     public static event Action makeNoise; // makeNoise event'ini static yaparak tüm PC'lerin paylaþmasýný saðlýyoruz.
     public static event Action pcActivated;
+
+    public GameObject light;
     private void Awake()
     {
         timer = 0f;
@@ -36,10 +38,10 @@ public class PC : MonoBehaviour, InterfaceInteractable
                 makeNoise?.Invoke();
                 madeNoise = true;
             }
-            Debug.Log(timer);
             yield return null;
         }
         isActivated = true; // Aktivasyon tamamlandý
+        light.SetActive(true);
         pcActivated?.Invoke();
     }
 }

@@ -84,7 +84,7 @@ public class PlayerIdleState : BaseState<PlayerController.PlayerStates>
 
     public override void EnterState()
     {
-        
+
     }
 
     public override void ExitState()
@@ -183,10 +183,12 @@ public class PlayerHoldBreathState : BaseState<PlayerController.PlayerStates>
 
     public override void UpdateState()
     {
-        PlayerController.breatheAmount -= Time.deltaTime * 5f;
+        PlayerController.breatheAmount -= Time.deltaTime * 3f;
         PlayerController.breatheAmount = Mathf.Clamp(PlayerController.breatheAmount, 0, 100);
-        if (PlayerController.breatheAmount <= 0) player.TransitionToState(PlayerController.PlayerStates.Idle);
-        Debug.Log(PlayerController.breatheAmount);
+        if (PlayerController.breatheAmount <= 0)
+        {
+            player.TransitionToState(PlayerController.PlayerStates.Idle);
+        }
     }
 }
 
@@ -210,7 +212,7 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
                 this.interactable = interactable;
                 Transform targetLoc = collider.GetComponentInChildren<InteractLocation>().transform;
                 player.transform.DOMove(targetLoc.position, 3f).OnComplete(() => interactable.Interact());
-                player.transform.DOLookAt(targetLoc.position, 3f).onComplete += () => player.animator.SetBool("isInteract",true);
+                player.transform.DOLookAt(targetLoc.position, 3f);
             }
         }
     }
@@ -218,7 +220,6 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
     public override void ExitState()
     {
         interactable.OutInteract();
-        player.animator.SetBool("isInteract", false);
     }
 
     public override PlayerController.PlayerStates GetNextState()
@@ -233,6 +234,7 @@ public class PlayerInteractionState : BaseState<PlayerController.PlayerStates>
             player.makeNoise?.Invoke();
             player.TransitionToState(PlayerController.PlayerStates.Dead);
         }
+        Debug.Log("Interaction ");
     }
 }
 

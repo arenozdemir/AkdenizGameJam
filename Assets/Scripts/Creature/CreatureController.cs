@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class CreatureController : StateManager<CreatureController.CreatureState>
 {
@@ -89,7 +90,7 @@ public class CreatureChaseState : BaseState<CreatureController.CreatureState>
 
     public override void EnterState()
     {
-        playerPos = creature.locationManager.GetPlayerPosition();
+        playerPos = creature.locationManager.GetSearchNode();
         creature.agent.speed = 5f;
         creature.agent.SetDestination(playerPos);
         creature.animator.SetBool("isRunning", true);
@@ -132,6 +133,7 @@ public class CreatureSearchState : BaseState<CreatureController.CreatureState>
         searchCount = 0;
         nodePos = creature.locationManager.GetSearchNode();
         creature.agent.SetDestination(nodePos);
+        creature.animator.SetBool("isWalking", true);
     }
 
     public override void ExitState()
@@ -150,12 +152,14 @@ public class CreatureSearchState : BaseState<CreatureController.CreatureState>
     {
         if (Vector3.Distance(creature.transform.position, nodePos) <= 1f)
         {
+            creature.animator.SetBool("isWalking", false);
             timer += Time.deltaTime;
             if (timer >= searchTime)
             {
                 searchCount++;
                 timer = 0;
                 SetNewNode();
+                creature.animator.SetBool("isWalking", true);
             }
         }
         else if (searchCount >= 3)
@@ -177,16 +181,16 @@ public class CreatureAttackState : BaseState<CreatureController.CreatureState>
     {
         this.creature = creature;
     }
-
     public override void EnterState()
     {
         creature.agent.isStopped = true;
         creature.animator.SetBool("isIdle", true);
+        SceneManager.LoadScene("DeadScene", LoadSceneMode.Single);
     }
 
     public override void ExitState()
     {
-        creature.agent.isStopped = false;
+        //creature.agent.isStopped = false;
     }
 
     public override CreatureController.CreatureState GetNextState()
@@ -196,7 +200,8 @@ public class CreatureAttackState : BaseState<CreatureController.CreatureState>
 
     public override void UpdateState()
     {
-        Debug.Log("Attacking");
-        creature.transform.rotation = Quaternion.Lerp(creature.transform.rotation, Quaternion.LookRotation(creature.locationManager.GetPlayerPosition() - creature.transform.position), Time.deltaTime * 5f);
+        //Debug.Log("Attacking");
+        //creature.transform.rotation = Quaternion.Lerp(creature.transform.rotation, Quaternion.LookRotation(creature.locationManager.GetPlayerPosition() - creature.transform.position), Time.deltaTime * 5f);
+        
     }
 }
