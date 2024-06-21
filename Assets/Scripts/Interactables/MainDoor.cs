@@ -27,7 +27,7 @@ public class MainDoor : MonoBehaviour
     {
         if (other.TryGetComponent(out PlayerController player))
         {
-            
+            SceneManager.LoadScene("FinishScene");
         }
     }
 }
